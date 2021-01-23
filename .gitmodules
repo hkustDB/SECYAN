@@ -1,0 +1,6 @@
+[submodule "extern/libOTe"]
+	path = extern/libOTe
+	url = https://github.com/osu-crypto/libOTe
+[submodule "extern/ABY"]
+	path = extern/ABY
+	url = https://github.com/encryptogroup/ABY
