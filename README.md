@@ -1,4 +1,4 @@
-# Secure Yannakakis: Join-Aggregate Queries over Private Data
+# [Secure Yannakakis: Join-Aggregate Queries over Private Data](https://home.cse.ust.hk/~yike/SecureYannakakis.pdf)
 
 --------------------------------------------------------------------------------
 
@@ -12,7 +12,7 @@
 
 # Configure and Compile
 ``` bash
-git clone --recurse-submodules https://github.com/Aqua-Dream/SECYAN
+git clone --recurse-submodules https://github.com/hkustDB/SECYAN
 cd SECYAN
 mkdir Release
 cd Release
