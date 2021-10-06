@@ -1,78 +1,33 @@
-# [Secure Yannakakis: Join-Aggregate Queries over Private Data](https://home.cse.ust.hk/~yike/SecureYannakakis.pdf)
-
+# SECYAN: An implementation to Secure Yannakakis 
 --------------------------------------------------------------------------------
 
-# Requirements
-## For Debian Linux
- - build-essential (gcc >= 8)
- - cmake >= 3.12
- - libssl-dev
- - libgmp-dev
- - libboost-all-dev (Boost >= 1.66)
+Yilei Wang and Ke Yi. [Secure Yannakakis: Join-Aggregate Queries over Private Data](https://www.cse.ust.hk/~yike/SecureYannakakis.pdf) ACM SIGMOD International Conference on Management of Data (SIGMOD), June 2021.
 
-# Configure and Compile
-``` bash
-git clone --recurse-submodules https://github.com/hkustDB/SECYAN
-cd SECYAN
-mkdir Release
-cd Release
-cmake .. -DCMAKE_BUILD_TYPE=Release
-make -j 8
-```
+# What is “Secure Yannakakis”?
+"Secure" refers to the [secure multi-party computation model (MPC)](https://en.wikipedia.org/wiki/Secure_multi-party_computation). 
 
-# Run Demo
-Switch to the output folder `Release/src/example`.
-``` bash
-# Server
-> ./secyandemo
-Who are you? [0. Server, 1. Client]: 0
-Establishing connection... Finished!
-Which query to run? [0. Q3, 1. Q10, 2. Q18, 3. Q8, 4. Q9]: 2
-Which TPCH data size to use? [0. 1MB, 1. 3MB, 2. 10MB, 3. 33MB, 4. 100MB]: 2
-Start running query...
-Dummy Relation!
+"Yannakakis" refers to the generalized Yannakakis algorithm that computes any free-connex join aggregate query in linear time. 
 
-Running time: 5277ms
-Communication cost: 266.873 MB
-Finished!
-```
-``` bash
-# Client
-> ./secyandemo
-Who are you? [0. Server, 1. Client]: 1
-Establishing connection... Finished!
-Which query to run? [0. Q3, 1. Q10, 2. Q18, 3. Q8, 4. Q9]: 2
-Which TPCH data size to use? [0. 1MB, 1. 3MB, 2. 10MB, 3. 33MB, 4. 100MB]: 2
-Start running query...
-row_num o_custkey       o_orderkey      o_orderdate     o_totalprice    c_name annotation
-1       667     29158   1995-10-21      439687.19       00000667        305
-2       178     6882    1997-04-09      422359.62       00000178        303
+Secure Yannakakis is a protocol that achieves the generalized Yannakakis algorithm under MPC model. 
 
-Running time: 3714ms
-Communication cost: 266.41 MB
-Finished!
-```
+# When do we need Secure Yannakakis?
+Let's consider an example below. Suppose an insurance company have two tables that include the information of coinsurance of all the users and includes the classification of diseases respectively. On the other hand, a hospital holds a table that includes some information of the patients.
 
-# Run Benchmark
-Switch to the output folder `Release/src/example`.
-``` bash
-> ./benchmark
-Usage: ./benchmark
- -r [Role: 0/1, default: 0 (SERVER), required]
- -a [IP-address, default: 127.0.0.1, optional]
- -p [Port (will use port & port+1), default: 7766, optional]
- -n [Number of test runs, default: 3, optional]
- -q [Query ID (3,10,18,8,9,0), default: 0, i.e. test all queries. , optional]
+![Example](example.png)
 
-Program exiting
-> ./benchmark -r 0 > result_server.txt &
-> ./benchmark -r 1 > result_client.txt &
-```
+Now the insurance company wants to estimate the amount of payment classified by disease types, which can be expressed by a query. In the non-private model, hospital sends its table to insurance company, then the query can be computed by generalized Yannakakis algorithm. 
+However under SMC model, this idea does not work, because we must ensure the privacy of the three tables. Using secure Yannakakis, after computation, the insurance company will learn the query results, but not the hospital’s data. The hospital should not learn anything about the insurance company’s data.
 
-# Remark
- - SECYAN only read the last 8 digits of string from data file. For example, the the first row of column `c_name` in `customer.tbl` is `Customer#000000001`, but it will be outputted as `00000001`.
- - To use your own data, please refer to the format of files under `data` folder. SECYAN currently cannot generate annotations automatically. You need to write the annotation columns on your own.
- - To run your own query, please refer to the file `data/TPCH.cpp`. SECYAN currently cannot generate codes from SQL automatically. You need to rewrite your query into combinations of operators (`Aggregation`,`SemiJoin`,`Join`,etc.).
+
+
+
+# Why do we choose Secure Yannakakis?
+Just one reason: it is much faster than the best previous work, [SMCQL](https://arxiv.org/abs/1606.06808), that simply uses a Garbled Circuit.
+
+![Experiment Result](exp.png)
+
+# How to use SECYAN?
+See [INSTALL.md](INSTALL.md) for configuration.
 
 # Acknowledgment
-Thank [SixSiebenUno](https://github.com/SixSiebenUno) for helping writing the code.
+Thank [@SixSiebenUno](https://github.com/SixSiebenUno) for helping writing the code.
