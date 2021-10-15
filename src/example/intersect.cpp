@@ -4,6 +4,7 @@
 #include <fstream>
 #include <vector>
 #include <unordered_set>
+#include <algorithm>
 #include "ENCRYPTO_utils/parse_options.h"
 #include "../core/PSI.h"
 #include "../core/party.h"
@@ -127,6 +128,7 @@ vector<uint32_t> serverPSI(vector<uint64_t> &data)
         if(indicator[index] ^ indicator2[index])
             intersectSet.push_back(data[i]);
     }
+    sort(intersectSet.begin(), intersectSet.end());
     gParty.Send(intersectSet);
     return intersectSet;
 }
@@ -162,11 +164,11 @@ int main(int argc, char **argv)
     data.assign(ids.begin(), ids.end());
 
     cout << "Exchanging data securely..." << flush;
-    gParty.Tick("Exchanging data");
     gParty.Init(address, port, role);
+    gParty.Tick("Intersection time:");
     vector<uint32_t> intersectSet = (role == SERVER)? serverPSI(data): clientPSI(data);
     cout << " Finished!" << endl;
-    gParty.Tick("Exchanging data");
+    gParty.Tick("Intersection time:");
 
     cout << "Writing data to file..." << flush;
     write_ids_to_file(intersectSet, outfilepath);
