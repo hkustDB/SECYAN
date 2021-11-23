@@ -8,7 +8,7 @@
 
 # Configure and Compile
 ``` bash
-git clone --recurse-submodules https://github.com/Aqua-Dream/SECYAN
+git clone --recurse-submodules git@github.com:hkustDB/SECYAN.git
 cd SECYAN
 mkdir Release
 cd Release
