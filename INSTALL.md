@@ -69,3 +69,4 @@ Program exiting
  - SECYAN only read the last 8 digits of string from data file. For example, the the first row of column `c_name` in `customer.tbl` is `Customer#000000001`, but it will be outputted as `00000001`.
  - To use your own data, please refer to the format of files under `data` folder. SECYAN currently cannot generate annotations automatically. You need to write the annotation columns on your own.
  - To run your own query, please refer to the file `data/TPCH.cpp`. SECYAN currently cannot generate codes from SQL automatically. You need to rewrite your query into combinations of operators (`Aggregation`,`SemiJoin`,`Join`,etc.).
+ - You may get error `error: size of array element is not a multiple of its alignment` if you are using GCC with a high version. The solution could be resolve by editing `SECYAN/extern/ABY/extern/ENCRYPTO_utils/extern/relic/src/md/blake2.h` as in https://github.com/Raptor3um/raptoreum/issues/48.
